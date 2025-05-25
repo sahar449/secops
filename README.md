@@ -10,19 +10,10 @@ This project demonstrates a complete secure DevOps pipeline that includes:
 - Kyverno policy validation
 - Jenkins CI/CD automation
 
-## Architecture
+## Architecture Diagram
 
-```
-┌─────────────┐    ┌──────────────┐    ┌─────────────────┐
-│   Jenkins   │───▶│ Docker Build │───▶│ Cosign Signing  │
-└─────────────┘    └──────────────┘    └─────────────────┘
-       │                                        │
-       ▼                                        ▼
-┌─────────────┐    ┌──────────────┐    ┌─────────────────┐
-│  Kyverno    │◀───│ Kubernetes   │◀───│ Registry Push   │
-│ Validation  │    │ Deployment   │    └─────────────────┘
-└─────────────┘    └──────────────┘
-```
+(./secops.png)
+
 
 ## Prerequisites
 
