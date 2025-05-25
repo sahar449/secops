@@ -1,0 +1,115 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: sahar-security-policy
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+  - name: no-privileged-pods
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+    validate:
+      message: "Privileged containers not allowed in Pods"
+      pattern:
+        spec:
+          =(securityContext):
+            =(privileged): "false"
+          containers:
+          - name: "*"
+            =(securityContext):
+              =(privileged): "false"
+
+  - name: no-privileged-deployments
+    match:
+      any:
+      - resources:
+          kinds:
+          - Deployment
+    validate:
+      message: "Privileged containers not allowed in Deployments"
+      pattern:
+        spec:
+          template:
+            spec:
+              =(securityContext):
+                =(privileged): "false"
+              containers:
+              - name: "*"
+                =(securityContext):
+                  =(privileged): "false"
+  
+  - name: must-run-as-nonroot-pods
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+    validate:
+      message: "Pods must run as non-root"
+      pattern:
+        spec:
+          =(securityContext):
+            =(runAsNonRoot): "true"
+          containers:
+          - name: "*"
+            =(securityContext):
+              =(runAsNonRoot): "true"
+
+  - name: must-run-as-nonroot-deployments
+    match:
+      any:
+      - resources:
+          kinds:
+          - Deployment
+    validate:
+      message: "Deployments must run as non-root"
+      pattern:
+        spec:
+          template:
+            spec:
+              =(securityContext):
+                =(runAsNonRoot): "true"
+              containers:
+              - name: "*"
+                =(securityContext):
+                  =(runAsNonRoot): "true"
+              
+  - name: require-resources-pods
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+    validate:
+      message: "Resource limits required for Pods"
+      pattern:
+        spec:
+          containers:
+          - name: "*"
+            resources:
+              limits:
+                memory: "?*"
+                cpu: "?*"
+
+  - name: require-resources-deployments
+    match:
+      any:
+      - resources:
+          kinds:
+          - Deployment
+    validate:
+      message: "Resource limits required for Deployments"
+      pattern:
+        spec:
+          template:
+            spec:
+              containers:
+              - name: "*"
+                resources:
+                  limits:
+                    memory: "?*"
+                    cpu: "?*"
