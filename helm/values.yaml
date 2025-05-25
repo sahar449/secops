@@ -1,0 +1,18 @@
+replicaCount: 2
+
+image:
+  repository: sahar449/secops
+  digest: ""
+  tag: ""  # לא חובה אם אתה משתמש ב־digest
+
+service:
+  name: sahar-service
+  type: NodePort
+  port: 80
+  targetPort: 5000
+  nodePort: 30080
+
+app:
+  name: sahar-app
+  labels:
+    app: sahar-app
