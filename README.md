@@ -12,7 +12,7 @@ This project demonstrates a complete secure DevOps pipeline that includes:
 
 ## Architecture Diagram
 
-(./secops.png)
+![Architecture Diagram](./secops.png)
 
 
 ## Prerequisites
